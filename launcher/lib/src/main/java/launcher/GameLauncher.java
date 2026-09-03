@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import fr.flowarg.flowupdater.FlowUpdater;
+import fr.flowarg.flowupdater.download.IProgressCallback;
 import fr.flowarg.flowupdater.download.json.Mod;
 import fr.flowarg.flowupdater.versions.VanillaVersion;
 import fr.flowarg.flowupdater.versions.neoforge.NeoForgeVersion;
@@ -33,7 +34,7 @@ public class GameLauncher {
 		return singleInstance;
 	}
 	
-	public void updateGame() {
+	public void updateGame(IProgressCallback callback) {
 		VanillaVersion vanillaVersion = new VanillaVersion.VanillaVersionBuilder()
                 .withName(gameVersion)
                 .build();
@@ -47,6 +48,7 @@ public class GameLauncher {
         FlowUpdater flowUpdater = new FlowUpdater.FlowUpdaterBuilder()
                 .withVanillaVersion(vanillaVersion)
                 .withModLoaderVersion(neoForge)
+                .withProgressCallback(callback)
                 .build();
         
         try {

@@ -8,6 +8,7 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
+    id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
 repositories {
@@ -44,6 +45,11 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+}
+
+javafx {
+    version = "21.0.2"
+    modules = listOf("javafx.controls")
 }
 
 tasks.named<Test>("test") {
