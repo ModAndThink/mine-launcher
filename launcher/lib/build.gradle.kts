@@ -13,6 +13,10 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    
+    maven {
+        url = uri("https://litarvan.github.io/maven")
+    }
 }
 
 dependencies {
@@ -26,6 +30,13 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation(libs.guava)
+    
+    // To update minecraft version
+    implementation("fr.flowarg:openlauncherlib:3.2.11")
+    // To launch the game
+    implementation("fr.flowarg:flowupdater:1.9.4")
+    // For authentification
+    implementation("fr.litarvan:openauth:1.1.6")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
