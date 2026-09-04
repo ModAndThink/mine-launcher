@@ -24,6 +24,8 @@ public class GameLauncher {
 	
 	private static GameLauncher singleInstance;
 	
+	public static String playername = "Bobby";
+	
 	// We put the constructor in private
 	private GameLauncher() {}
 	
@@ -70,6 +72,28 @@ public class GameLauncher {
 					authInfos,
 					GameFolder.FLOW_UPDATER
 			);
+			
+			System.out.println("[Mouskill launcher] starting game");
+			// Run it
+			noFramework.launch(gameVersion,modLoaderVersion, NoFramework.ModLoader.NEO_FORGE);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void launchGame(int ramAmout) {
+		AuthInfos authInfos = new AuthInfos(playername, UUID.randomUUID().toString(), UUID.randomUUID().toString());
+		
+		try {
+			// Initialize launcher
+			NoFramework noFramework = new NoFramework(
+					launcherDir,
+					authInfos,
+					GameFolder.FLOW_UPDATER
+			);
+			
+			noFramework.getAdditionalVmArgs().add("-Xmx"+ramAmout+"M");
 			
 			System.out.println("[Mouskill launcher] starting game");
 			// Run it
