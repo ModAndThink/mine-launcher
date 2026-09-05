@@ -1,7 +1,6 @@
 package launcher;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +14,7 @@ import fr.flowarg.openlauncherlib.NoFramework;
 import fr.theshark34.openlauncherlib.minecraft.AuthInfos;
 import fr.theshark34.openlauncherlib.minecraft.GameFolder;
 import fr.theshark34.openlauncherlib.minecraft.util.GameDirGenerator;
+import javafx.application.Platform;
 
 public class GameLauncher {
 	// SETTING
@@ -23,8 +23,6 @@ public class GameLauncher {
 	private static Path launcherDir = GameDirGenerator.createGameDir("Mouskill", true);
 	
 	private static GameLauncher singleInstance;
-	
-	public static String playername = "Bobby";
 	
 	// We put the constructor in private
 	private GameLauncher() {}
@@ -41,7 +39,9 @@ public class GameLauncher {
                 .withName(gameVersion)
                 .build();
 		
-		List<Mod> mods = new ArrayList<>();
+		// We get mods
+		List<Mod> mods = Mod.getModsFromJson("http://modsdownload.mouskill.playit.plus/mods/index.json");
+		
 		NeoForgeVersion neoForge = new NeoForgeVersionBuilder()
 				.withNeoForgeVersion(modLoaderVersion)
 				.withMods(mods)
@@ -62,8 +62,8 @@ public class GameLauncher {
 		}
 	}
 	
-	public void launchGame() {
-		AuthInfos authInfos = new AuthInfos("PlayerUsername", UUID.randomUUID().toString(), UUID.randomUUID().toString());
+	public void launchGame(String playername) {
+		AuthInfos authInfos = new AuthInfos(playername, UUID.randomUUID().toString(), UUID.randomUUID().toString());
 		
 		try {
 			// Initialize launcher
@@ -82,7 +82,7 @@ public class GameLauncher {
 		}
 	}
 	
-	public void launchGame(int ramAmout) {
+	public void launchGame(String playername, int ramAmout) {
 		AuthInfos authInfos = new AuthInfos(playername, UUID.randomUUID().toString(), UUID.randomUUID().toString());
 		
 		try {
@@ -94,13 +94,29 @@ public class GameLauncher {
 			);
 			
 			noFramework.getAdditionalVmArgs().add("-Xmx"+ramAmout+"M");
+			noFramework.getAdditionalArgs().add("--quickPlayMultiplayer");
+			noFramework.getAdditionalArgs().add("mouskill.playit.plus");
 			
 			System.out.println("[Mouskill launcher] starting game");
 			// Run it
-			noFramework.launch(gameVersion,modLoaderVersion, NoFramework.ModLoader.NEO_FORGE);
+			Process p = noFramework.launch(gameVersion,modLoaderVersion, NoFramework.ModLoader.NEO_FORGE);
+			
+			Platform.runLater(() -> {
+				try {
+					p.waitFor();
+					Platform.exit();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public Path getLaunchDir() {
+		return launcherDir;
 	}
 }

@@ -6,8 +6,7 @@
  */
 
 plugins {
-    // Apply the java-library plugin for API and implementation separation.
-    `java-library`
+    application
     id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
@@ -26,9 +25,6 @@ dependencies {
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-    api(libs.commons.math3)
-
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation(libs.guava)
     
@@ -38,6 +34,8 @@ dependencies {
     implementation("fr.flowarg:flowupdater:1.9.4")
     // For authentification
     implementation("fr.litarvan:openauth:1.1.6")
+    // For json
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -55,4 +53,14 @@ javafx {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+application {
+    mainClass.set("launcher.Main")
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "launcher.Main"
+    }
 }
