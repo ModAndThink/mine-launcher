@@ -100,16 +100,6 @@ public class GameLauncher {
 			System.out.println("[Mouskill launcher] starting game");
 			// Run it
 			Process p = noFramework.launch(gameVersion,modLoaderVersion, NoFramework.ModLoader.NEO_FORGE);
-			
-			Platform.runLater(() -> {
-				try {
-					p.waitFor();
-					Platform.exit();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			});
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
